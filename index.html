@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>H4ll0 w0rld Hub</title>
+<title>H4ll0 w0rld Hub - Dark System</title>
 
 <style>
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f0f0f, #1f1f1f);
-    color: white;
+    background: linear-gradient(180deg, #000000, #120000);
+    color: #e6e6e6;
     text-align: center;
 }
 
+/* Page */
 .page {
     display: none;
     height: 100vh;
@@ -20,18 +21,27 @@ body {
     align-items: center;
     flex-direction: column;
 }
+.active { display: flex; }
 
-.active {
-    display: flex;
+/* Title */
+h1 {
+    color: #ff2e2e;
+    text-shadow: 0 0 10px #ff0000;
+    margin-bottom: 10px;
 }
 
+p {
+    color: #aaa;
+}
+
+/* Button */
 button {
     padding: 12px 25px;
     margin: 10px;
+    border-radius: 10px;
     border: none;
-    border-radius: 12px;
-    background: #00ffcc;
-    color: black;
+    background: linear-gradient(45deg, #ff0000, #990000);
+    color: white;
     font-weight: bold;
     cursor: pointer;
     transition: 0.2s;
@@ -39,24 +49,46 @@ button {
 
 button:hover {
     transform: scale(1.05);
-    background: #00e6b8;
+    box-shadow: 0 0 15px #ff0000;
 }
 
+/* Input */
 input {
     padding: 10px;
-    border-radius: 10px;
-    border: none;
+    border-radius: 8px;
+    border: 1px solid #550000;
+    background: #0a0a0a;
+    color: white;
     width: 250px;
-    margin-top: 10px;
 }
 
+/* CARD */
 .update-box {
-    background: #1a1a1a;
-    padding: 12px;
+    background: #0a0a0a;
+    border: 1px solid #220000;
+    padding: 15px;
     margin: 10px;
     border-radius: 12px;
-    width: 80%;
-    box-shadow: 0 0 10px rgba(0,255,204,0.2);
+    width: 85%;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(255,0,0,0.2);
+    transition: 0.2s;
+}
+
+.update-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255,0,0,0.4);
+}
+
+/* Loading */
+#page2 h1 {
+    animation: fade 1s infinite;
+}
+
+@keyframes fade {
+    0% {opacity: 1;}
+    50% {opacity: 0.4;}
+    100% {opacity: 1;}
 }
 </style>
 </head>
@@ -65,7 +97,8 @@ input {
 
 <!-- PAGE 1 -->
 <div id="page1" class="page active">
-    <h1>Are you Viewer or Owner?</h1>
+    <h1>🩸 H4ll0 w0rld Hub</h1>
+    <p>Are you Viewer or Owner?</p>
     <button onclick="selectRole('viewer')">Viewer</button>
     <button onclick="selectRole('owner')">Owner</button>
 </div>
@@ -77,8 +110,7 @@ input {
 
 <!-- PAGE 3 -->
 <div id="page3" class="page">
-    <h1>H4ll0 w0rld Hub Updates</h1>
-
+    <h1>Updates</h1>
     <div id="updates"></div>
 
     <div id="ownerPanel" style="display:none;">
@@ -92,11 +124,11 @@ input {
 <script>
 let role = "";
 let updates = [
-    "🚀 Welcome to H4ll0 w0rld Hub!",
-    "🔥 New update system added!"
+    "🩸 System initialized...",
+    "🔥 Horror theme applied"
 ];
 
-// PASSWORD DISAMARKAN (Base64)
+// password encoded
 let encodedPass = "SDQhbDAjVzByTGQkSHViXzlYa1BAMjchelE=";
 
 function checkPassword(input) {
@@ -111,7 +143,6 @@ function showPage(pageId) {
 function selectRole(r) {
     if (r === "owner") {
         let inputPass = prompt("Enter Owner Password:");
-
         if (!checkPassword(inputPass)) {
             alert("Wrong Password!");
             return;
@@ -128,7 +159,7 @@ function selectRole(r) {
         if (role === "owner") {
             document.getElementById("ownerPanel").style.display = "block";
         }
-    }, 2000);
+    }, 1500);
 }
 
 function loadUpdates() {
@@ -154,4 +185,4 @@ function addUpdate() {
 </script>
 
 </body>
-</html>
+            </html>
