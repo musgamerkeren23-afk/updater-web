@@ -10,82 +10,85 @@ body {
     font-family: 'Segoe UI', sans-serif;
     background: #050505;
     color: white;
-}
-
-/* Container */
-.container {
-    padding: 20px;
-    max-width: 500px;
-    margin: auto;
-}
-
-/* Title */
-h1 {
     text-align: center;
-    background: linear-gradient(45deg, #ff0000, #ff4d4d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+}
+
+.page {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.active { display: flex; }
+
+h1 {
+    color: #ff2e2e;
+    text-shadow: 0 0 10px red;
+}
+
+/* Button */
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(45deg, #ff0000, #990000);
+    color: white;
+    cursor: pointer;
 }
 
 /* Card */
 .card {
     background: linear-gradient(145deg, #0a0a0a, #120000);
-    border-radius: 15px;
     padding: 15px;
-    margin-top: 15px;
-    box-shadow: 0 5px 20px rgba(255,0,0,0.2);
-    border: 1px solid rgba(255,0,0,0.2);
+    margin: 10px;
+    border-radius: 15px;
+    width: 85%;
+    max-width: 400px;
+    box-shadow: 0 5px 20px rgba(255,0,0,0.3);
     transition: 0.2s;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(255,0,0,0.5);
-}
-
-/* Badge */
-.badge {
-    font-size: 12px;
-    color: #ff4d4d;
-    margin-bottom: 5px;
+    box-shadow: 0 10px 30px rgba(255,0,0,0.6);
 }
 
 /* Input */
 input {
-    width: 100%;
     padding: 10px;
-    margin-top: 10px;
     border-radius: 10px;
     border: none;
     background: #111;
     color: white;
-}
-
-/* Button */
-button {
-    width: 100%;
-    margin-top: 10px;
-    padding: 12px;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(45deg, #ff0000, #990000);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
     <h1>🩸 H4ll0 w0rld Hub</h1>
+    <p>Choose your role</p>
+    <button onclick="goViewer()">Viewer</button>
+    <button onclick="goOwner()">Owner</button>
+</div>
 
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+    <h1>Loading...</h1>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+    <h1>Updates</h1>
     <div id="updates"></div>
 
     <div id="ownerPanel" style="display:none;">
         <input type="text" id="newUpdate" placeholder="Type update...">
-        <button onclick="addUpdate()">Post Update</button>
+        <button onclick="addUpdate()">Post</button>
     </div>
 </div>
 
@@ -93,7 +96,7 @@ button {
 let role = "";
 let encodedPass = "SDQhbDAjVzByTGQkSHViXzlYa1BAMjchelE=";
 
-// LOAD DATA (SAVE SYSTEM)
+// SAVE SYSTEM
 let updates = JSON.parse(localStorage.getItem("updates")) || [
     "🩸 System initialized",
     "🔥 Welcome to H4ll0 w0rld Hub"
@@ -107,21 +110,41 @@ function checkPassword(input) {
     return btoa(input) === encodedPass;
 }
 
-// SELECT ROLE
-let pilih = prompt("viewer / owner ?");
-if (pilih === "owner") {
-    let pass = prompt("Password:");
-    if (checkPassword(pass)) {
-        role = "owner";
-        document.getElementById("ownerPanel").style.display = "block";
-    } else {
-        alert("Wrong Password");
-    }
-} else {
-    role = "viewer";
+function showPage(id) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
 }
 
-// LOAD UI
+// VIEWER
+function goViewer() {
+    role = "viewer";
+    showPage("page2");
+
+    setTimeout(() => {
+        showPage("page3");
+        loadUpdates();
+    }, 1200);
+}
+
+// OWNER (pakai prompt)
+function goOwner() {
+    let pass = prompt("Enter Owner Password:");
+
+    if (!checkPassword(pass)) {
+        alert("Wrong Password!");
+        return;
+    }
+
+    role = "owner";
+    showPage("page2");
+
+    setTimeout(() => {
+        showPage("page3");
+        loadUpdates();
+        document.getElementById("ownerPanel").style.display = "block";
+    }, 1200);
+}
+
 function loadUpdates() {
     let container = document.getElementById("updates");
     container.innerHTML = "";
@@ -129,25 +152,21 @@ function loadUpdates() {
     updates.forEach(u => {
         let div = document.createElement("div");
         div.className = "card";
-        div.innerHTML = `
-            <div class="badge">UPDATE</div>
-            <div>${u}</div>
-        `;
+        div.innerText = u;
         container.appendChild(div);
     });
 }
 
 function addUpdate() {
     let input = document.getElementById("newUpdate");
+
     if (input.value.trim() !== "") {
         updates.unshift(input.value);
-        saveUpdates(); // SIMPAN
+        saveUpdates();
         input.value = "";
         loadUpdates();
     }
 }
-
-loadUpdates();
 </script>
 
 </body>
