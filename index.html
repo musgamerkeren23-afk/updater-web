@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>H4ll0 w0rld Hub</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #1f1f1f);
+    color: white;
+    text-align: center;
+}
+
+.page {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.active {
+    display: flex;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 12px;
+    background: #00ffcc;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background: #00e6b8;
+}
+
+input {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    width: 250px;
+    margin-top: 10px;
+}
+
+.update-box {
+    background: #1a1a1a;
+    padding: 12px;
+    margin: 10px;
+    border-radius: 12px;
+    width: 80%;
+    box-shadow: 0 0 10px rgba(0,255,204,0.2);
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+    <h1>Are you Viewer or Owner?</h1>
+    <button onclick="selectRole('viewer')">Viewer</button>
+    <button onclick="selectRole('owner')">Owner</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+    <h1>Loading...</h1>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+    <h1>H4ll0 w0rld Hub Updates</h1>
+
+    <div id="updates"></div>
+
+    <div id="ownerPanel" style="display:none;">
+        <h3>Add Update</h3>
+        <input type="text" id="newUpdate" placeholder="Type update...">
+        <br>
+        <button onclick="addUpdate()">Post</button>
+    </div>
+</div>
+
+<script>
+let role = "";
+let updates = [
+    "🚀 Welcome to H4ll0 w0rld Hub!",
+    "🔥 New update system added!"
+];
+
+// PASSWORD DISAMARKAN (Base64)
+let encodedPass = "SDQhbDAjVzByTGQkSHViXzlYa1BAMjchelE=";
+
+function checkPassword(input) {
+    return btoa(input) === encodedPass;
+}
+
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+}
+
+function selectRole(r) {
+    if (r === "owner") {
+        let inputPass = prompt("Enter Owner Password:");
+
+        if (!checkPassword(inputPass)) {
+            alert("Wrong Password!");
+            return;
+        }
+    }
+
+    role = r;
+    showPage("page2");
+
+    setTimeout(() => {
+        showPage("page3");
+        loadUpdates();
+
+        if (role === "owner") {
+            document.getElementById("ownerPanel").style.display = "block";
+        }
+    }, 2000);
+}
+
+function loadUpdates() {
+    let container = document.getElementById("updates");
+    container.innerHTML = "";
+
+    updates.forEach(u => {
+        let div = document.createElement("div");
+        div.className = "update-box";
+        div.innerText = u;
+        container.appendChild(div);
+    });
+}
+
+function addUpdate() {
+    let input = document.getElementById("newUpdate");
+    if (input.value.trim() !== "") {
+        updates.unshift(input.value);
+        input.value = "";
+        loadUpdates();
+    }
+}
+</script>
+
+</body>
+</html>
